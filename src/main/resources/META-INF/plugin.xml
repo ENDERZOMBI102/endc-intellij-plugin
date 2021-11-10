@@ -1,19 +1,25 @@
-<idea-plugin version="2">
-	<id>org.antlr.jetbrains.sample</id>
-	<name>Sample Jetbrains Plugin</name>
+<idea-plugin>
+	<id>com.enderzombi102.endc-lang</id>
+	<name>EndC-Lang</name>
 	<version>0.1</version>
-	<vendor email="parrt@antlr.org" url="https://github.com/parrt/sample-jetbrains-plugin">ANTLR Project Sample Jetbrains Plugin</vendor>
+	<vendor email="enderzombi102.end@gmail.com" url="https://github.com/ENDERZOMBI102/EndCPlugin">EndC Plugin</vendor>
 
 	<description><![CDATA[
-  <p>Sample plugin</p>
-
-<p>
-<a href="https://github.com/parrt/sample-jetbrains-plugin">Github source</a>
-  ]]></description>
+		<p>EndC lang Plugin</p>
+		<br>
+		This plugin adds support for EndC, its features include:
+		<ul>
+			<li>file types (.ec .endc)</li>
+			<li>syntax highlight</li>
+		</ul>
+		<p>
+			<a href="https://github.com/ENDERZOMBI102/EndCPlugin">Github source</a>
+		</p>
+  	]]></description>
 
 	<change-notes><![CDATA[
-        ]]>
-	</change-notes>
+		Stuff
+	]]></change-notes>
 
 	<!-- please see http://confluence.jetbrains.net/display/IDEADEV/Build+Number+Ranges for description -->
 	<idea-version since-build="133"/> <!-- requires 13.x, 14.x, 15.x -->
@@ -28,7 +34,7 @@
 
 	<project-components>
 		<component>
-			<implementation-class>org.antlr.jetbrains.sample.SamplePluginController</implementation-class>
+			<implementation-class>com.enderzombi102.endc.EndcPluginController</implementation-class>
 		</component>
 	</project-components>
 
@@ -36,21 +42,18 @@
 	</actions>
 
 	<extensions defaultExtensionNs="com.intellij">
-		<fileTypeFactory implementation="org.antlr.jetbrains.sample.SampleFileTypeFactory"/>
-		<lang.syntaxHighlighterFactory key="Sample"
-									   implementationClass="org.antlr.jetbrains.sample.SampleSyntaxHighlighterFactory"/>
+		<fileTypeFactory implementation="com.enderzombi102.endc.EndcFileTypeFactory"/>
+		<lang.syntaxHighlighterFactory implementationClass="com.enderzombi102.endc.EndcSyntaxHighlighterFactory"/>
 
-		<lang.parserDefinition language="Sample" implementationClass="org.antlr.jetbrains.sample.SampleParserDefinition"/>
-		<lang.ast.factory language="Sample" implementationClass="org.antlr.jetbrains.sample.SampleASTFactory"/>
+		<lang.parserDefinition language="EndC" implementationClass="com.enderzombi102.endc.EndcParserDefinition"/>
+		<lang.ast.factory language="EndC" implementationClass="com.enderzombi102.endc.EndcASTFactory"/>
 
-		<lang.psiStructureViewFactory language="Sample"
-									  implementationClass="org.antlr.jetbrains.sample.structview.SampleStructureViewFactory"/>
+		<lang.psiStructureViewFactory language="EndC" implementationClass="com.enderzombi102.endc.structview.EndcStructureViewFactory"/>
 
-		<colorSettingsPage implementation="org.antlr.jetbrains.sample.SampleColorSettingsPage"/>
+		<colorSettingsPage implementation="com.enderzombi102.endc.EndcColorSettingsPage"/>
 
-		<externalAnnotator language="Sample" implementationClass="org.antlr.jetbrains.sample.SampleExternalAnnotator"/>
+		<externalAnnotator language="EndC" implementationClass="com.enderzombi102.endc.EndcExternalAnnotator"/>
 
-		<lang.findUsagesProvider language="Sample"
-								 implementationClass="org.antlr.jetbrains.sample.SampleFindUsagesProvider"/>
+		<lang.findUsagesProvider language="EndC" implementationClass="com.enderzombi102.endc.EndcFindUsagesProvider"/>
 	</extensions>
 </idea-plugin>
