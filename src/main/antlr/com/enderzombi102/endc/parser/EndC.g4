@@ -13,39 +13,65 @@ grammar EndC;
  *  or compilationUnit, etc...
  */
 script
-	:	vardef* function* statement* EOF
+	:	import_statement* vardef* function* statement* template* EOF
+	;
+
+import_statement
+	:	'OWN' importables 'FROM' MODULENAME '/'
+	;
+
+importables : importable ( '.' importable )* ;
+
+importable
+	: FUNCID
+	| TYPEID
 	;
 
 function
-	:	'XPORT'? 'DCLAR FUNC' ID '{' formal_args? '} <- ' type block
+	:	'XPORT'? 'DCLAR' 'FUNC' FUNCID '{' formal_args? '}' '<-' type func_block
 	;
 
-formal_args : formal_arg (',' formal_arg)* ;
+template
+	:	'XPORT'? 'DCLAR' 'TMPLAT' TYPEID '[' template_body ']'
+	;
 
-formal_arg : ID ':' type ;
+template_body
+	:	vardef
+	|	function
+	|	'DCLAR' 'FUNC' ('init'|'uninit') '{' formal_args? '}' func_block
+	;
+
+formal_args : formal_arg ('.' formal_arg)* ;
+
+formal_arg
+	:	type VARID
+	|	type '()' VARID
+	;
 
 type:	'InTgR'                                             # IntTypeSpec
 	|	'StRiNg'                                            # StringTypeSpec
 	|	'BoOlAn'											# BooleanTypeSpec
 	|	'NoThInG'											# NothingTypeSpec
+	|	'()'												# ArrayTypeSpec
+	|	TYPEID												# CustomTypeSpec
 	;
 
-block
+func_block
 	:  '[' (statement|vardef)* ']';
 
 statement
-	:	'CHCK IF' '{' expr '}' 'DO' '[' statement ']' ( 'LS DO' '[' statement ']' )?		# If
-	|	ID '=' expr											# Assign
-	|	ID '(' expr ')' '=' expr							# ElementAssign
-	|	call_expr											# CallStatement
-	|	'printto' '{' ID expr? '}'							# Print
-	|	'GIV BACK' expr										# Return
-	|	block				 								# BlockStatement
+	:	'CHCK' 'IF' '{' expr '}' 'DO' '[' statement ']' ( 'LS' 'DO' '[' statement ']' )?	# If
+	|	VARID '=' expr '/'																	# Assign
+	|	VARID '(' expr ')' '=' expr '/'														# ElementAssign
+	|	call_expr '/'																		# CallStatement
+	|	'CALL' 'printto' '{' ('STDOUT'|'STDERR') DOT (VARID|expr|call_expr) '}' '/'			# Print
+	|	'GIV' 'BACK' expr '/'																# Return
+	|	func_block '/'				 														# BlockStatement
 	;
 
 vardef
-	:	'DCLAR' 'CONSTANT' ID '=' expr						# DeclareConstant
-	|	'DCLAR' 'VARIABL' ID '=' expr						# DeclareVariable
+	:	'DCLAR' 'CONSTANT' TYPEID VARID '=' expr '/'					# DeclareConstant
+	|	'DCLAR' 'VARIABL' TYPEID VARID '=' expr '/'						# DeclareVariable
 	;
 
 expr
@@ -53,7 +79,7 @@ expr
 	|	'-' expr											# Negate
 	|	'!' expr											# Not
 	|	call_expr											# Call
-	|	ID '(' expr ')'										# Index
+	|	VARID '(' expr ')'									# Index
 	|	'{' expr '}'										# Parens
 	|	primary												# Atom
 	;
@@ -61,18 +87,22 @@ expr
 operator  : DIV|ADD|SUB|GT|GE|LT|LE|EQUAL_EQUAL|NOT_EQUAL|OR|AND|DOT ; // no implicit precedence
 
 call_expr
-	: 'CALL' ID '(' expr_list? ')' ;
+	: 'CALL' 'BUILD' TYPEID '{' expr_list? '}'						# TemplateInstantiation
+	| 'CALL' '{' ( call_expr ) '}' ',' FUNCID '{' expr_list? '}'	# NestedCall
+	| 'CALL' FUNCID '{' expr_list? '}'								# SimpleCall
+	;
 
-expr_list : expr (',' expr)* ;
+expr_list : expr ('.' expr)* ;
 
 primary
-	:	ID													# Identifier
+	:	FUNCID												# FunctionIdentifier
+	|	TYPEID												# TypeIdentifier
+	|	VARID												# VaribleIdentifier
 	|	INT													# Integer
 	|	FLOAT												# Float
 	|	STRING												# String
 	|	'[' expr_list ']'									# Vector
-	|	'true'												# TrueLiteral
-	|	'false'												# FalseLiteral
+	|	'NO'												# FalseLiteral
 	;
 
 LPAREN : '(' ;
@@ -110,12 +140,15 @@ GT : '>' ;
 GE : '>=' ;
 OR : '||' ;
 AND : '&&' ;
-DOT : ' . ' ;
+DOT : '.' ;
+ARROW : '<-' ;
 
 COMMENT      : '|*' .*? '*|'    	-> channel(HIDDEN) ;
 
-TEMPLATE_ID : [A-Z] ( [a-z][A-z] )*;
-ID  : [a-zA-Z_] [a-zA-Z0-9_]* ;
+MODULENAME : [a-zA-Z]+ ;
+TYPEID : [A-Z]([a-z][A-z])+ ;
+FUNCID  : [a-z_]([a-zA-Z0-9_])* ;
+VARID : [a-z]{1}([a-zA-Z0-9_\-$]){9,} ;
 INT : [0-9]+ ;
 FLOAT
 	:   '-'? INT '.' INT EXP?   // 1.35, 1.35E-9, 0.3, -4.5
@@ -137,4 +170,3 @@ WS : [ \t\n\r]+ -> channel(HIDDEN) ;
 ERRCHAR
 	:	.	-> channel(HIDDEN)
 	;
-
