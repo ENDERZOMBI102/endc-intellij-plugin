@@ -1,4 +1,4 @@
-XPORT TMPLAT TsTtMpLaT [
+XPORT DCLAR TMPLAT TsTtMpLaT [
      |* Called on template init
      *|
      DCLAR FUNC init{} [
