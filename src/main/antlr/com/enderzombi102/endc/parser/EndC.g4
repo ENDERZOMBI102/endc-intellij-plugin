@@ -65,7 +65,7 @@ statement
 	|	VARID '(' expr ')' '=' expr '/'														# ElementAssign
 	|	call_expr '/'																		# CallStatement
 	|	'CALL' 'printto' '{' ('STDOUT'|'STDERR') DOT (VARID|expr|call_expr) '}' '/'			# Print
-	|	'GIV' 'BACK' expr '/'																# Return
+	|	'GIV' 'BACK' (expr|call_expr) '/'																# Return
 	|	func_block '/'				 														# BlockStatement
 	;
 
@@ -87,9 +87,10 @@ expr
 operator  : DIV|ADD|SUB|GT|GE|LT|LE|EQUAL_EQUAL|NOT_EQUAL|OR|AND|DOT ; // no implicit precedence
 
 call_expr
-	: 'CALL' 'BUILD' TYPEID '{' expr_list? '}'						# TemplateInstantiation
-	| 'CALL' '{' ( call_expr ) '}' ',' FUNCID '{' expr_list? '}'	# NestedCall
-	| 'CALL' FUNCID '{' expr_list? '}'								# SimpleCall
+	: 'CALL' 'BUILD' TYPEID '{' expr_list? '}'										# TemplateInstantiation
+	| 'CALL' '{' ( call_expr ) '}' ',' FUNCID '{' expr_list? '}'					# NestedCall
+	| 'CALL' FUNCID '{' expr_list? '}'												# SimpleCall
+	| 'CALL' 'FUNC' '{' formal_args? '}' '<-' TYPEID func_block '{' expr_list? '}'	# DirectCall
 	;
 
 expr_list : expr ('.' expr)* ;
