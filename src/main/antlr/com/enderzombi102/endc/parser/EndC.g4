@@ -13,99 +13,124 @@ grammar EndC;
  *  or compilationUnit, etc...
  */
 script
-	:	import_statement* vardef* function* statement* template* EOF
+	:	import_statement* ( vardef | function | statement | template )+ EOF
 	;
 
+// IMPORT
 import_statement
-	:	'OWN' importables 'FROM' MODULENAME '/'
+	:	OWN importables FROM MODULENAME '/'
 	;
 
 importables : importable ( '.' importable )* ;
 
-importable
-	: FUNCID
-	| TYPEID
+importable : ID ;
+
+// DECLARATIONS
+function
+	:	EXPORT? DECLARE SUBRUTINE ID func_args ARROW type func_block
 	;
 
-function
-	:	'XPORT'? 'DCLAR' 'FUNC' FUNCID '{' formal_args? '}' '<-' type func_block
+method
+	:	DECLARE BEHAVIOR ID func_args ARROW type func_block
 	;
 
 template
-	:	'XPORT'? 'DCLAR' 'TMPLAT' TYPEID '[' template_body ']'
+	:	EXPORT? DECLARE TEMPLATE ID template_block
 	;
 
-template_body
-	:	vardef
-	|	function
-	|	'DCLAR' 'FUNC' ('init'|'uninit') '{' formal_args? '}' func_block
+template_initializer
+	: DECLARE INITIALIZER func_args func_block
 	;
+
+template_deinitializer
+	: DECLARE DEINITIALIZER func_args func_block
+	;
+
+vardef
+	:	DECLARE CONSTANT type ID '=' expr '/'					# DeclareConstant
+	|	DECLARE VARIABLE type ID '=' expr '/'					# DeclareVariable
+	;
+
+// ARGUMENTS
+func_args : '{' formal_args? '}' ;
 
 formal_args : formal_arg ('.' formal_arg)* ;
 
 formal_arg
-	:	type VARID
-	|	type '()' VARID
+	:	type ID
+	|	type '()' ID
 	;
 
-type:	'InTgR'                                             # IntTypeSpec
-	|	'StRiNg'                                            # StringTypeSpec
-	|	'BoOlAn'											# BooleanTypeSpec
-	|	'NoThInG'											# NothingTypeSpec
-	|	'()'												# ArrayTypeSpec
-	|	TYPEID												# CustomTypeSpec
+arguments : '{' expr_list? '}' ;
+
+// BLOCKS
+template_block
+	:	 '[' ( vardef |	method | template_initializer | template_deinitializer )* ']'
 	;
 
 func_block
-	:  '[' (statement|vardef)* ']';
+	:  '[' (statement|vardef)* ']'
+	;
 
 statement
 	:	'CHCK' 'IF' '{' expr '}' 'DO' '[' statement ']' ( 'LS' 'DO' '[' statement ']' )?	# If
-	|	VARID '=' expr '/'																	# Assign
-	|	VARID '(' expr ')' '=' expr '/'														# ElementAssign
+	|	qualifiedName '=' expr '/'															# Assign
+	|	qualifiedName '(' expr ')' '=' expr '/'												# ElementAssign
 	|	call_expr '/'																		# CallStatement
-	|	'CALL' 'printto' '{' ('STDOUT'|'STDERR') DOT (VARID|expr|call_expr) '}' '/'			# Print
-	|	'GIV' 'BACK' (expr|call_expr) '/'																# Return
+	|	'GIV' 'BACK' (expr) '/'																# Return
 	|	func_block '/'				 														# BlockStatement
 	;
 
-vardef
-	:	'DCLAR' 'CONSTANT' TYPEID VARID '=' expr '/'					# DeclareConstant
-	|	'DCLAR' 'VARIABL' TYPEID VARID '=' expr '/'						# DeclareVariable
-	;
-
+// EXPRESSIONS
 expr
 	:	expr operator expr									# Op
 	|	'-' expr											# Negate
 	|	'!' expr											# Not
 	|	call_expr											# Call
-	|	VARID '(' expr ')'									# Index
+	|	qualifiedName '(' expr ')'							# Index
 	|	'{' expr '}'										# Parens
 	|	primary												# Atom
 	;
 
-operator  : DIV|ADD|SUB|GT|GE|LT|LE|EQUAL_EQUAL|NOT_EQUAL|OR|AND|DOT ; // no implicit precedence
-
 call_expr
-	: 'CALL' 'BUILD' TYPEID '{' expr_list? '}'										# TemplateInstantiation
-	| 'CALL' '{' ( call_expr ) '}' ',' FUNCID '{' expr_list? '}'					# NestedCall
-	| 'CALL' FUNCID '{' expr_list? '}'												# SimpleCall
-	| 'CALL' 'FUNC' '{' formal_args? '}' '<-' TYPEID func_block '{' expr_list? '}'	# DirectCall
+	: CALL BUILD ID arguments									# TemplateInstantiation
+	| CALL '{' ( call_expr ) '}' ',' qualifiedName arguments		# NestedCall
+	| CALL qualifiedName arguments								# SimpleCall
+	| CALL SUBRUTINE func_args ARROW type func_block arguments		# DirectCall
 	;
 
 expr_list : expr ('.' expr)* ;
 
+// OTHA
 primary
-	:	FUNCID												# FunctionIdentifier
-	|	TYPEID												# TypeIdentifier
-	|	VARID												# VaribleIdentifier
+	:	qualifiedName										# Identifier
 	|	INT													# Integer
 	|	FLOAT												# Float
 	|	STRING												# String
-	|	'[' expr_list ']'									# Vector
+	|	'(' expr_list ')'									# Vector
 	|	'NO'												# FalseLiteral
+	|	'M'													# MetaConstant
+	|	'STDOUT'											# StreamConstant
+	|	'STDIN'												# StreamConstant
+	|	'STDERR'											# StreamConstant
 	;
 
+type
+	:	'InTgR'                                             # IntTypeSpec
+	|	'StRiNg'                                            # StringTypeSpec
+	|	'BoOlAn'											# BooleanTypeSpec
+	|	'NoThInG'											# NothingTypeSpec
+	|	'()'												# ArrayTypeSpec
+	|	ID													# CustomTypeSpec
+	;
+
+qualifiedName
+    :   ID ( ',' ID )*
+    ;
+
+operator  : DIV|ADD|SUB|GT|GE|LT|LE|EQUAL_EQUAL|NOT_EQUAL|OR|AND|COMMA ; // no implicit precedence
+
+// SYMBOLS
 LPAREN : '(' ;
 RPAREN : ')' ;
 COLON : ':' ;
@@ -114,20 +139,7 @@ LBRACK : '[' ;
 RBRACK : ']' ;
 LBRACE : '{' ;
 RBRACE : '}' ;
-IF : 'IF' ;
-ELSE : 'LS' ;
-DCLAR : 'DCLAR' ;
-CONSTANT : 'CONSTANT' ;
-VARIABLE : 'VARIABL' ;
 EQUAL : '=' ;
-GIVE : 'GIV' ;
-BACK : 'BACK' ;
-PRINT : 'printto' ;
-FUNC : 'FUNC' ;
-TYPEINT : 'InTgR' ;
-TYPESTRING : 'StRiNg' ;
-TYPEBOOLEAN : 'BoOlAn' ;
-FALSE : 'NO' ;
 SUB : '+' ;
 BANG : '!' ;
 DIV : ';' ;
@@ -144,12 +156,34 @@ AND : '&&' ;
 DOT : '.' ;
 ARROW : '<-' ;
 
-COMMENT      : '|*' .*? '*|'    	-> channel(HIDDEN) ;
+// KEYWORDS
+IF : 'IF' ;
+ELSE : 'LS' ;
+DECLARE : 'DCLAR' ;
+CONSTANT : 'CONSTANT' ;
+VARIABLE : 'VARIABL' ;
+GIVE : 'GIV' ;
+BACK : 'BACK' ;
+SUBRUTINE : 'SUBRUTIN' ;
+CALL : 'CALL' ;
+EXPORT : 'XPORT' ;
+TEMPLATE : 'TMPLAT' ;
+BEHAVIOR : 'BHAVIOR' ;
+BUILD : 'BUILD' ;
+OWN : 'OWN' ;
+FROM : 'FROM' ;
+INITIALIZER : 'INITIALIZR' ;
+DEINITIALIZER : 'DINITIALIZR' ;
 
+// CONSTANTS
+CONSTANTME : 'M' ;
+FALSE : 'NO' ;
+
+// DYNAMIC NAMES
+COMMENT : '|*' .*? '*|' -> channel(HIDDEN) ;
+
+ID : [a-zA-Z_]([a-zA-Z0-9_])+ ;
 MODULENAME : [a-zA-Z]+ ;
-TYPEID : [A-Z]([a-z][A-z])+ ;
-FUNCID  : [a-z_]([a-zA-Z0-9_])* ;
-VARID : [a-z]{1}([a-zA-Z0-9_\-$]){9,} ;
 INT : [0-9]+ ;
 FLOAT
 	:   '-'? INT '.' INT EXP?   // 1.35, 1.35E-9, 0.3, -4.5
@@ -157,7 +191,7 @@ FLOAT
 	;
 fragment EXP :   [Ee] [+\-]? INT ;
 
-STRING :  '*' (ESC | ~["\\])* '*' ;
+STRING :  '*' ( '\\*' | . )*? '*' ;
 fragment ESC :   '\\' ["\bfnrt] ;
 
 WS : [ \t\n\r]+ -> channel(HIDDEN) ;
