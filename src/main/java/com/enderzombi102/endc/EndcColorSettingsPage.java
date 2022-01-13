@@ -43,7 +43,7 @@ public class EndcColorSettingsPage implements ColorSettingsPage {
 		return
 			"|* block comment\n" +
 			"*|\n" +
-			"DCLAR FUNC f{ StRiNg somTxt____ } [\n" +
+			"DCLAR SUBRITIN f{ StRiNg somTxt____ } [\n" +
 			"   CALL printto{ STDOUT. somTxt____ }\n" +
 			"]\n";
 	}

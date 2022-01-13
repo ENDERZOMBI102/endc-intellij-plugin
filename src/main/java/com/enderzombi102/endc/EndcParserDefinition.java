@@ -169,7 +169,7 @@ public class EndcParserDefinition implements ParserDefinition {
 				return new VardefSubtree(node, elType);
 			case RULE_formal_arg :
 				return new ArgdefSubtree(node, elType);
-			case RULE_block :
+			case RULE_func_block:
 				return new BlockSubtree(node);
 			case RULE_call_expr :
 				return new CallSubtree(node);

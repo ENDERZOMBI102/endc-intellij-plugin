@@ -69,20 +69,28 @@ public class EndcSyntaxHighlighter extends SyntaxHighlighterBase {
 		int ttype = myType.getANTLRTokenType();
 		TextAttributesKey attrKey;
 		switch ( ttype ) {
-			case EndCLexer.ID :
+			case EndCLexer.ID:
 				attrKey = ID;
 				break;
-			case EndCLexer.VARIABLE :
-			case IF :
-			case EndCLexer.ELSE :
+			case EndCLexer.IF:
+			case EndCLexer.ELSE:
+			case EndCLexer.DECLARE:
+			case EndCLexer.CONSTANT:
+			case EndCLexer.VARIABLE:
 			case EndCLexer.GIVE:
 			case BACK:
-			case EndCLexer.PRINT :
-			case EndCLexer.FUNC :
-			case EndCLexer.TYPEINT :
-			case EndCLexer.TYPESTRING :
-			case EndCLexer.TYPEBOOLEAN :
+			case EndCLexer.SUBRUTINE:
+			case EndCLexer.CALL:
+			case EndCLexer.EXPORT:
+			case EndCLexer.TEMPLATE:
+			case EndCLexer.BEHAVIOR:
+			case EndCLexer.BUILD:
+			case EndCLexer.OWN:
+			case EndCLexer.FROM:
+			case EndCLexer.INITIALIZER:
+			case EndCLexer.DEINITIALIZER:
 			case EndCLexer.FALSE:
+			case EndCLexer.CONSTANTME:
 				attrKey = KEYWORD;
 				break;
 			case EndCLexer.STRING :
