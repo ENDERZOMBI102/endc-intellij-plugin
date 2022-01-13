@@ -42,7 +42,7 @@
 	</actions>
 
 	<extensions defaultExtensionNs="com.intellij">
-		<fileTypeFactory implementation="com.enderzombi102.endc.EndcFileTypeFactory"/>
+		<fileType language="EndC" extensions="endc;ec" implementationClass="com.enderzombi102.endc.EndcFileType" name="EndC file"/>
 		<lang.syntaxHighlighterFactory implementationClass="com.enderzombi102.endc.EndcSyntaxHighlighterFactory"/>
 
 		<lang.parserDefinition language="EndC" implementationClass="com.enderzombi102.endc.EndcParserDefinition"/>
