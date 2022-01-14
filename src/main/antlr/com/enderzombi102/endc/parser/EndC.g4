@@ -65,7 +65,13 @@ arguments : '{' expr_list? '}' ;
 
 // BLOCKS
 template_block
-	:	 '[' ( vardef |	method | template_initializer | template_deinitializer )* ']'
+	:	'['
+			(	vardef
+			| 	method
+			| 	template_initializer
+			|	template_deinitializer
+			)+
+		']'
 	;
 
 func_block
@@ -93,9 +99,9 @@ expr
 	;
 
 call_expr
-	: CALL BUILD ID arguments									# TemplateInstantiation
+	: CALL BUILD ID arguments										# TemplateInstantiation
 	| CALL '{' ( call_expr ) '}' ',' qualifiedName arguments		# NestedCall
-	| CALL qualifiedName arguments								# SimpleCall
+	| CALL qualifiedName arguments									# SimpleCall
 	| CALL SUBRUTINE func_args ARROW type func_block arguments		# DirectCall
 	;
 

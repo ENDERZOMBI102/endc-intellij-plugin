@@ -12,6 +12,6 @@ public class EndcStructureViewRootElement extends EndcStructureViewElement {
 	@NotNull
 	@Override
 	public ItemPresentation getPresentation() {
-		return new EndcRootPresentation((PsiFile)element);
+		return new EndcRootPresentation( (PsiFile) element );
 	}
 }

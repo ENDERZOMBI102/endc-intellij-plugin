@@ -22,7 +22,7 @@ import com.enderzombi102.endc.psi.ArgdefSubtree;
 import com.enderzombi102.endc.psi.BlockSubtree;
 import com.enderzombi102.endc.psi.CallSubtree;
 import com.enderzombi102.endc.psi.FunctionSubtree;
-import com.enderzombi102.endc.psi.SamplePSIFileRoot;
+import com.enderzombi102.endc.psi.EndcPSIFileRoot;
 import com.enderzombi102.endc.psi.VardefSubtree;
 import org.antlr.v4.runtime.Parser;
 import org.antlr.v4.runtime.tree.ParseTree;
@@ -123,7 +123,7 @@ public class EndcParserDefinition implements ParserDefinition {
 	 */
 	@Override
 	public @NotNull PsiFile createFile( @NotNull FileViewProvider viewProvider ) {
-		return new SamplePSIFileRoot(viewProvider);
+		return new EndcPSIFileRoot(viewProvider);
 	}
 
 	/** Convert from *NON-LEAF* parse node (AST they call it)

@@ -15,8 +15,8 @@ import org.jetbrains.annotations.Nullable;
 
 import javax.swing.*;
 
-public class SamplePSIFileRoot extends PsiFileBase implements ScopeNode {
-    public SamplePSIFileRoot(@NotNull FileViewProvider viewProvider) {
+public class EndcPSIFileRoot extends PsiFileBase implements ScopeNode {
+    public EndcPSIFileRoot(@NotNull FileViewProvider viewProvider) {
         super(viewProvider, EndcLanguage.INSTANCE);
     }
 
@@ -28,7 +28,7 @@ public class SamplePSIFileRoot extends PsiFileBase implements ScopeNode {
 
     @Override
     public String toString() {
-        return "Sample Language file";
+        return "EndC Language file";
     }
 
     @Override
@@ -36,8 +36,8 @@ public class SamplePSIFileRoot extends PsiFileBase implements ScopeNode {
         return Icons.ENDC_ICON;
     }
 
-	/** Return null since a file scope has no enclosing scope. It is
-	 *  not itself in a scope.
+	/**
+	 * Return null since a file scope has no enclosing scope. It is not itself in a scope.
 	 */
 	@Override
 	public ScopeNode getContext() {
@@ -47,14 +47,9 @@ public class SamplePSIFileRoot extends PsiFileBase implements ScopeNode {
 	@Nullable
 	@Override
 	public PsiElement resolve(PsiNamedElement element) {
-//		System.out.println(getClass().getSimpleName()+
-//		                   ".resolve("+element.getName()+
-//		                   " at "+Integer.toHexString(element.hashCode())+")");
 		if ( element.getParent() instanceof CallSubtree ) {
-			return SymtabUtils.resolve(this, EndcLanguage.INSTANCE,
-			                           element, "/script/function/ID");
+			return SymtabUtils.resolve(this, EndcLanguage.INSTANCE,  element, "/script/function/ID");
 		}
-		return SymtabUtils.resolve(this, EndcLanguage.INSTANCE,
-		                           element, "/script/vardef/ID");
+		return SymtabUtils.resolve(this, EndcLanguage.INSTANCE, element, "/script/vardef/ID");
 	}
 }

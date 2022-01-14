@@ -4,14 +4,14 @@ import com.intellij.ide.structureView.StructureViewModel;
 import com.intellij.ide.structureView.StructureViewModelBase;
 import com.intellij.ide.structureView.StructureViewTreeElement;
 import com.intellij.ide.util.treeView.smartTree.Sorter;
-import com.enderzombi102.endc.psi.SamplePSIFileRoot;
+import com.enderzombi102.endc.psi.EndcPSIFileRoot;
 import org.jetbrains.annotations.NotNull;
 
 public class EndcStructureViewModel
 	extends StructureViewModelBase
 	implements StructureViewModel.ElementInfoProvider
 {
-	public EndcStructureViewModel(SamplePSIFileRoot root) {
+	public EndcStructureViewModel(EndcPSIFileRoot root) {
 		super(root, new EndcStructureViewRootElement(root));
 	}
 
@@ -28,6 +28,6 @@ public class EndcStructureViewModel
 	@Override
 	public boolean isAlwaysShowsPlus(StructureViewTreeElement element) {
 		Object value = element.getValue();
-  		return value instanceof SamplePSIFileRoot;
+  		return value instanceof EndcPSIFileRoot;
 	}
 }

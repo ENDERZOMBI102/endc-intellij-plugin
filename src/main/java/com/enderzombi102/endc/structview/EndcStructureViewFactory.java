@@ -6,7 +6,7 @@ import com.intellij.ide.structureView.TreeBasedStructureViewBuilder;
 import com.intellij.lang.PsiStructureViewFactory;
 import com.intellij.openapi.editor.Editor;
 import com.intellij.psi.PsiFile;
-import com.enderzombi102.endc.psi.SamplePSIFileRoot;
+import com.enderzombi102.endc.psi.EndcPSIFileRoot;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -18,7 +18,7 @@ public class EndcStructureViewFactory implements PsiStructureViewFactory {
 			@NotNull
 			@Override
 			public StructureViewModel createStructureViewModel(@Nullable Editor editor) {
-				return new EndcStructureViewModel((SamplePSIFileRoot)psiFile);
+				return new EndcStructureViewModel((EndcPSIFileRoot)psiFile);
 			}
 		};
 	}

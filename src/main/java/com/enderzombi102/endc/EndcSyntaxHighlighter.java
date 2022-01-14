@@ -40,6 +40,10 @@ public class EndcSyntaxHighlighter extends SyntaxHighlighterBase {
 			"ENDC_ID",
 			DefaultLanguageHighlighterColors.IDENTIFIER
 	);
+	public static final TextAttributesKey CLASSID = createTextAttributesKey(
+			"ENDC_TEMPLATEID",
+			DefaultLanguageHighlighterColors.CLASS_NAME
+	);
 	public static final TextAttributesKey KEYWORD = createTextAttributesKey(
 			"ENDC_KEYWORD",
 			DefaultLanguageHighlighterColors.KEYWORD

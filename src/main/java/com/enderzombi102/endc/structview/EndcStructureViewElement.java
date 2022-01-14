@@ -9,7 +9,7 @@ import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiNamedElement;
 import org.antlr.intellij.adaptor.xpath.XPath;
 import com.enderzombi102.endc.EndcLanguage;
-import com.enderzombi102.endc.psi.SamplePSIFileRoot;
+import com.enderzombi102.endc.psi.EndcPSIFileRoot;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
@@ -30,8 +30,8 @@ public class EndcStructureViewElement implements StructureViewTreeElement, Sorta
 
 	@Override
 	public void navigate(boolean requestFocus) {
-		if (element instanceof NavigationItem ) {
-			((NavigationItem) element).navigate(requestFocus);
+		if ( element instanceof NavigationItem ) {
+			( (NavigationItem) element ).navigate(requestFocus);
 		}
 	}
 
@@ -64,7 +64,7 @@ public class EndcStructureViewElement implements StructureViewTreeElement, Sorta
 	@NotNull
 	@Override
 	public TreeElement[] getChildren() {
-		if ( element instanceof SamplePSIFileRoot ) {
+		if ( element instanceof EndcPSIFileRoot) {
 			Collection<? extends PsiElement> funcs = XPath.findAll(EndcLanguage.INSTANCE, element, "/script/function/ID");
 			List<TreeElement> treeElements = new ArrayList<>(funcs.size());
 			for (PsiElement el : funcs) {
