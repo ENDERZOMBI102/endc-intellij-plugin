@@ -70,7 +70,7 @@ statement
 	|	qualified_name '=' expr '/'															# Assign
 	|	qualified_name '(' expr ')' '=' expr '/'											# ElementAssign
 	|	call_expr '/'																		# CallStatement
-	|	GIVE BACK (expr) '/'																# Return
+	|	GIVE BACK expr '/'																	# Return
 	|	func_block '/'				 														# BlockStatement
 	;
 
