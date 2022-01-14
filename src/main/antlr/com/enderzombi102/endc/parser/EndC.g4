@@ -83,7 +83,7 @@ expr
 	|	qualified_name '(' expr ')'							# Index
 	|	'{' expr '}'										# Parens
 	|	primary												# Atom
-	|	anonim_function												# AnonimFunction
+	|	anonim_function										# AnonimFunction
 	;
 
 anonim_function	: SUBRUTINE func_args ARROW type func_block ;
