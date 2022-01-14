@@ -38,6 +38,7 @@ public class EndcParserDefinition implements ParserDefinition {
 	public static TokenIElementType ID;
 
 	static {
+		//noinspection deprecation
 		PSIElementTypeFactory.defineLanguageIElementTypes(
 				EndcLanguage.INSTANCE,
 				com.enderzombi102.endc.parser.EndCParser.tokenNames,
@@ -47,23 +48,20 @@ public class EndcParserDefinition implements ParserDefinition {
 		ID = tokenIElementTypes.get(com.enderzombi102.endc.parser.EndCLexer.ID);
 	}
 
-	public static final TokenSet COMMENTS =
-		PSIElementTypeFactory.createTokenSet(
-			EndcLanguage.INSTANCE,
-			com.enderzombi102.endc.parser.EndCLexer.COMMENT
-		);
+	public static final TokenSet COMMENTS = PSIElementTypeFactory.createTokenSet(
+		EndcLanguage.INSTANCE,
+		com.enderzombi102.endc.parser.EndCLexer.COMMENT
+	);
 
-	public static final TokenSet WHITESPACE =
-		PSIElementTypeFactory.createTokenSet(
-			EndcLanguage.INSTANCE,
-			com.enderzombi102.endc.parser.EndCLexer.WS
-		);
+	public static final TokenSet WHITESPACE = PSIElementTypeFactory.createTokenSet(
+		EndcLanguage.INSTANCE,
+		com.enderzombi102.endc.parser.EndCLexer.WS
+	);
 
-	public static final TokenSet STRING =
-		PSIElementTypeFactory.createTokenSet(
-			EndcLanguage.INSTANCE,
-			com.enderzombi102.endc.parser.EndCLexer.STRING
-		);
+	public static final TokenSet STRING = PSIElementTypeFactory.createTokenSet(
+		EndcLanguage.INSTANCE,
+		com.enderzombi102.endc.parser.EndCLexer.STRING
+	);
 
 	@NotNull
 	@Override
@@ -80,10 +78,10 @@ public class EndcParserDefinition implements ParserDefinition {
 			protected ParseTree parse(Parser parser, IElementType root) {
 				// start rule depends on root passed in; sometimes we want to create an ID node etc...
 				if ( root instanceof IFileElementType ) {
-					return ((com.enderzombi102.endc.parser.EndCParser) parser).script();
+					return ( (com.enderzombi102.endc.parser.EndCParser) parser ).script();
 				}
 				// let's hope it's an ID as needed by "rename function"
-				return ((com.enderzombi102.endc.parser.EndCParser) parser).primary();
+				return ( (com.enderzombi102.endc.parser.EndCParser) parser ).primary();
 			}
 		};
 	}
@@ -104,15 +102,11 @@ public class EndcParserDefinition implements ParserDefinition {
 		return STRING;
 	}
 
-	public SpaceRequirements spaceExistanceTypeBetweenTokens(ASTNode left, ASTNode right) {
-		return SpaceRequirements.MAY;
-	}
-
 	/** What is the IFileElementType of the root parse tree node? It
 	 *  is called from {@link #createFile(FileViewProvider)} at least.
 	 */
 	@Override
-	public IFileElementType getFileNodeType() {
+	public @NotNull IFileElementType getFileNodeType() {
 		return FILE;
 	}
 
@@ -128,7 +122,7 @@ public class EndcParserDefinition implements ParserDefinition {
 	 *  it back via: {@link PsiFile#getNode}.
 	 */
 	@Override
-	public PsiFile createFile(FileViewProvider viewProvider) {
+	public @NotNull PsiFile createFile( @NotNull FileViewProvider viewProvider ) {
 		return new SamplePSIFileRoot(viewProvider);
 	}
 

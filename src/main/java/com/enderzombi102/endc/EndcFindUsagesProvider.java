@@ -22,7 +22,7 @@ import static com.enderzombi102.endc.parser.EndCParser.RULE_vardef;
 public class EndcFindUsagesProvider implements FindUsagesProvider {
 	/** Is "find usages" meaningful for a kind of definition subtree? */
 	@Override
-	public boolean canFindUsagesFor(PsiElement psiElement) {
+	public boolean canFindUsagesFor(@NotNull PsiElement psiElement) {
 		return psiElement instanceof IdentifierPSINode || // the case where we highlight the ID in def subtree itself
 			   psiElement instanceof FunctionSubtree ||   // remaining cases are for resolve() results
 			   psiElement instanceof VardefSubtree;
@@ -36,7 +36,7 @@ public class EndcFindUsagesProvider implements FindUsagesProvider {
 
 	@Nullable
 	@Override
-	public String getHelpId(PsiElement psiElement) {
+	public String getHelpId(@NotNull PsiElement psiElement) {
 		return null;
 	}
 
@@ -46,22 +46,22 @@ public class EndcFindUsagesProvider implements FindUsagesProvider {
 	public String getType(PsiElement element) {
 		// The parent of an ID node will be a RuleIElementType:
 		// function, vardef, formal_arg, statement, expr, call_expr, primary
-		ANTLRPsiNode parent = (ANTLRPsiNode)element.getParent();
-		RuleIElementType elType = (RuleIElementType)parent.getNode().getElementType();
+		ANTLRPsiNode parent = (ANTLRPsiNode) element.getParent();
+		RuleIElementType elType = (RuleIElementType) parent.getNode().getElementType();
 		switch ( elType.getRuleIndex() ) {
 			case RULE_function :
 			case RULE_call_expr :
 				return "function";
 			case RULE_vardef :
-				return "variable";
-			case RULE_formal_arg :
-				return "parameter";
 			case RULE_statement :
 			case RULE_expr :
 			case RULE_primary :
 				return "variable";
+			case RULE_formal_arg :
+				return "parameter";
+			default:
+				return "";
 		}
-		return "";
 	}
 
 	@NotNull
@@ -73,7 +73,6 @@ public class EndcFindUsagesProvider implements FindUsagesProvider {
 	@NotNull
 	@Override
 	public String getNodeText(PsiElement element, boolean useFullName) {
-		String text = element.getText();
-		return text;
+		return element.getText();
 	}
 }

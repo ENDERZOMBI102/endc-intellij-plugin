@@ -11,8 +11,6 @@ import org.antlr.intellij.adaptor.lexer.PSIElementTypeFactory;
 import org.antlr.intellij.adaptor.lexer.TokenIElementType;
 import org.jetbrains.annotations.NotNull;
 
-import static com.enderzombi102.endc.parser.EndCLexer.BACK;
-import static com.enderzombi102.endc.parser.EndCLexer.IF;
 import static com.intellij.openapi.editor.colors.TextAttributesKey.createTextAttributesKey;
 
 /** A highlighter is really just a mapping from token type to
@@ -35,16 +33,25 @@ import static com.intellij.openapi.editor.colors.TextAttributesKey.createTextAtt
  * For highlighting lexer errors, the standard TextAttributesKey
  * for bad characters HighlighterColors.BAD_CHARACTER can be used."
  */
+@SuppressWarnings("deprecation")
 public class EndcSyntaxHighlighter extends SyntaxHighlighterBase {
 	private static final TextAttributesKey[] EMPTY_KEYS = new TextAttributesKey[0];
-	public static final TextAttributesKey ID =
-		createTextAttributesKey("ENDC_ID", DefaultLanguageHighlighterColors.IDENTIFIER);
-	public static final TextAttributesKey KEYWORD =
-		createTextAttributesKey("ENDC_KEYWORD", DefaultLanguageHighlighterColors.KEYWORD);
-	public static final TextAttributesKey STRING =
-		createTextAttributesKey("ENDC_STRING", DefaultLanguageHighlighterColors.STRING);
-	public static final TextAttributesKey BLOCK_COMMENT =
-		createTextAttributesKey("ENDC_BLOCK_COMMENT", DefaultLanguageHighlighterColors.BLOCK_COMMENT);
+	public static final TextAttributesKey ID = createTextAttributesKey(
+			"ENDC_ID",
+			DefaultLanguageHighlighterColors.IDENTIFIER
+	);
+	public static final TextAttributesKey KEYWORD = createTextAttributesKey(
+			"ENDC_KEYWORD",
+			DefaultLanguageHighlighterColors.KEYWORD
+	);
+	public static final TextAttributesKey STRING = createTextAttributesKey(
+			"ENDC_STRING",
+			DefaultLanguageHighlighterColors.STRING
+	);
+	public static final TextAttributesKey BLOCK_COMMENT = createTextAttributesKey(
+			"ENDC_BLOCK_COMMENT",
+			DefaultLanguageHighlighterColors.BLOCK_COMMENT
+	);
 
 	static {
 		PSIElementTypeFactory.defineLanguageIElementTypes(
@@ -58,17 +65,19 @@ public class EndcSyntaxHighlighter extends SyntaxHighlighterBase {
 	@Override
 	public Lexer getHighlightingLexer() {
 		com.enderzombi102.endc.parser.EndCLexer lexer = new com.enderzombi102.endc.parser.EndCLexer(null);
-		return new ANTLRLexerAdaptor(EndcLanguage.INSTANCE, lexer);
+		return new ANTLRLexerAdaptor( EndcLanguage.INSTANCE, lexer );
 	}
 
 	@NotNull
 	@Override
-	public TextAttributesKey[] getTokenHighlights(IElementType tokenType) {
-		if ( !(tokenType instanceof TokenIElementType) ) return EMPTY_KEYS;
-		TokenIElementType myType = (TokenIElementType)tokenType;
-		int ttype = myType.getANTLRTokenType();
+	public TextAttributesKey @NotNull [] getTokenHighlights(IElementType tokenType) {
+		if (! ( tokenType instanceof TokenIElementType ) )
+			return EMPTY_KEYS;
+
+		var myType = (TokenIElementType) tokenType;
+
 		TextAttributesKey attrKey;
-		switch ( ttype ) {
+		switch ( myType.getANTLRTokenType() ) {
 			case EndCLexer.ID:
 				attrKey = ID;
 				break;
@@ -78,7 +87,7 @@ public class EndcSyntaxHighlighter extends SyntaxHighlighterBase {
 			case EndCLexer.CONSTANT:
 			case EndCLexer.VARIABLE:
 			case EndCLexer.GIVE:
-			case BACK:
+			case EndCLexer.BACK:
 			case EndCLexer.SUBRUTINE:
 			case EndCLexer.CALL:
 			case EndCLexer.EXPORT:
@@ -102,6 +111,6 @@ public class EndcSyntaxHighlighter extends SyntaxHighlighterBase {
 			default :
 				return EMPTY_KEYS;
 		}
-		return new TextAttributesKey[] {attrKey};
+		return new TextAttributesKey[] { attrKey };
 	}
 }

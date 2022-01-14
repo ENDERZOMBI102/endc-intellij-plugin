@@ -36,7 +36,7 @@ public class EndcASTFactory extends DefaultASTFactoryImpl {
 	@Override
 	public LeafElement createLeaf(@NotNull IElementType type, @NotNull CharSequence text) {
 		if (
-				type instanceof TokenIElementType &&
+			type instanceof TokenIElementType &&
 			 ( (TokenIElementType) type ).getANTLRTokenType() == com.enderzombi102.endc.parser.EndCLexer.ID
 		) {
 			// found an ID node; here we do not distinguish between definitions and references

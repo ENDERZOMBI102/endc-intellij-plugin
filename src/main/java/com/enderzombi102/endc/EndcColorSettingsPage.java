@@ -28,7 +28,7 @@ public class EndcColorSettingsPage implements ColorSettingsPage {
 	@Nullable
 	@Override
 	public Icon getIcon() {
-		return Icons.ENDC_ICON;
+		return null;
 	}
 
 	@NotNull
@@ -43,20 +43,20 @@ public class EndcColorSettingsPage implements ColorSettingsPage {
 		return
 			"|* block comment\n" +
 			"*|\n" +
-			"DCLAR SUBRITIN f{ StRiNg somTxt____ } [\n" +
-			"   CALL printto{ STDOUT. somTxt____ }\n" +
+			"DCLAR SUBROUTIN func{ StRiNg somTxt____ } [\n" +
+			"   CALL printto{ STDOUT. somTxt____ }/\n" +
 			"]\n";
 	}
 
 	@NotNull
 	@Override
-	public AttributesDescriptor[] getAttributeDescriptors() {
+	public AttributesDescriptor @NotNull [] getAttributeDescriptors() {
 		return DESCRIPTORS;
 	}
 
 	@NotNull
 	@Override
-	public ColorDescriptor[] getColorDescriptors() {
+	public ColorDescriptor @NotNull [] getColorDescriptors() {
 		return ColorDescriptor.EMPTY_ARRAY;
 	}
 

@@ -2,6 +2,7 @@ package com.enderzombi102.endc;
 
 import com.intellij.lang.annotation.AnnotationHolder;
 import com.intellij.lang.annotation.ExternalAnnotator;
+import com.intellij.lang.annotation.HighlightSeverity;
 import com.intellij.openapi.util.TextRange;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiFile;
@@ -45,7 +46,7 @@ public class EndcExternalAnnotator extends ExternalAnnotator<PsiFile, List<EndcE
 	 */
 	@Nullable
 	@Override
-	public List<Issue> doAnnotate(final PsiFile file) {
+	public List<Issue> doAnnotate( final PsiFile file ) {
 		Collection<? extends PsiElement> funcNameNodes =
 			XPath.findAll(EndcLanguage.INSTANCE, file, "/script/function/ID");
 		Collection<? extends PsiElement> funcCallNameNodes =
@@ -67,13 +68,11 @@ public class EndcExternalAnnotator extends ExternalAnnotator<PsiFile, List<EndcE
 
 	/** Called 3rd to actually annotate the editor window */
 	@Override
-	public void apply(@NotNull PsiFile file,
-					  List<Issue> issues,
-					  @NotNull AnnotationHolder holder)
+	public void apply( @NotNull PsiFile file, List<Issue> issues, @NotNull AnnotationHolder holder )
 	{
 		for (Issue issue : issues) {
-			TextRange range = issue.offendingNode.getTextRange();
-			holder.createErrorAnnotation(range, issue.msg);
+//			TextRange range = issue.offendingNode.getTextRange();
+			holder.newAnnotation( HighlightSeverity.ERROR, issue.msg ).create();
 		}
 	}
 }

@@ -29,21 +29,12 @@
 	<!-- uncomment to enable plugin in all products -->
 	<depends>com.intellij.modules.lang</depends>
 
-	<application-components>
-	</application-components>
-
-	<project-components>
-		<component>
-			<implementation-class>com.enderzombi102.endc.EndcPluginController</implementation-class>
-		</component>
-	</project-components>
-
 	<actions>
 	</actions>
 
 	<extensions defaultExtensionNs="com.intellij">
 		<fileType language="EndC" extensions="endc;ec" implementationClass="com.enderzombi102.endc.EndcFileType" name="EndC file"/>
-		<lang.syntaxHighlighterFactory implementationClass="com.enderzombi102.endc.EndcSyntaxHighlighterFactory"/>
+		<lang.syntaxHighlighterFactory language="EndC" implementationClass="com.enderzombi102.endc.EndcSyntaxHighlighterFactory"/>
 
 		<lang.parserDefinition language="EndC" implementationClass="com.enderzombi102.endc.EndcParserDefinition"/>
 		<lang.ast.factory language="EndC" implementationClass="com.enderzombi102.endc.EndcASTFactory"/>
