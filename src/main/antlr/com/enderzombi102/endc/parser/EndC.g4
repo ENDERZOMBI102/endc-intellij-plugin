@@ -39,7 +39,7 @@ template_deinitializer
 
 vardef
 	:	DECLARE CONSTANT type IDENTIFIER '=' expr '/'					# DeclareConstant
-	|	DECLARE VARIABLE type IDENTIFIER '=' expr '/'					# DeclareVariable
+	|	DECLARE VARIABLE type IDENTIFIER ( '=' expr )? '/'				# DeclareVariable
 	;
 
 // ARGUMENTS
@@ -192,9 +192,11 @@ FLOAT
 fragment EXP :   [Ee] [+\-]? INT ;
 
 STRING :  '*' ( '\\*' | . )*? '*' ;
-fragment ESC :   '\\' ["\bfnrt] ;
+fragment ESC :   '\\' [\bfnrt] ;
 
-WS : [ \t\n\r]+ -> channel(HIDDEN) ;
+NEWLINE : [ \n\r]+ -> channel(HIDDEN) ;
+TAB : [\t]+ ;
+SPACE : ([ ]{5})*[^ ] ;
 
 /** "catch all" rule for any char not matche in a token rule of your
  *  grammar. Lexers in Intellij must return all tokens good and bad.

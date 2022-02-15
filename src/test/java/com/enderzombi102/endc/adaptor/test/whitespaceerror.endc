@@ -1,0 +1,11 @@
+DCLAR SUBROUTIN hello{} <- InTgR [
+	|* This should error
+	*|
+	DCLAR CONSTANT StRiNg() hal = ( CALL BUILD name{} )/
+]
+
+DCLAR SUBROUTIN hello1{} <- InTgR [
+     |* This should not error
+     *|
+     DCLAR CONSTANT StRiNg() hal = ( CALL BUILD name{} )/
+]
